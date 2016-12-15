@@ -16,12 +16,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-signals:
-    void buttonClicked(int buttonID);
-
 private slots:
-    void button_clicked(int buttonID);
-    void button_clicked_trigger();
+    void push_button_clicked();
 
 private:
     Ui::MainWindow *ui;

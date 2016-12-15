@@ -1,3 +1,4 @@
+#include "dbconnection.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -7,8 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(button_clicked_trigger()));
-    connect(this, &MainWindow::buttonClicked, this, &MainWindow::button_clicked);
+    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(push_button_clicked()));
 }
 
 MainWindow::~MainWindow()
@@ -16,12 +16,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::button_clicked(int buttonID) {
-    QMessageBox *msgBox = new QMessageBox();
-    msgBox->setText(QString("%1").arg(buttonID));
-    msgBox->show();
-}
-
-void MainWindow::button_clicked_trigger() {
-    emit buttonClicked(555);
+void MainWindow::push_button_clicked() {
+    DBConnection *dbConnection = new DBConnection();
+    if(dbConnection->connect("localhost", "postgres", "postgres", "123456")) {
+        QMessageBox *msgBox = new QMessageBox();
+        msgBox->setText("Соединение установлено");
+        msgBox->show();
+        delete msgBox;
+        dbConnection->disconnect();
+    }
 }
