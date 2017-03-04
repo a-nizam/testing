@@ -8,6 +8,7 @@
 #include <QSqlField>
 #include <QSqlIndex>
 #include <QSqlRecord>
+#include <QMessageBox>
 
 
 class DBConnection : public QObject
@@ -20,10 +21,11 @@ public:
     QString dbName;
     QString userName;
     QString userPass;
-    QSqlDatabase db;
+    QSqlDatabase *db;
 public:
     int connect(QString dbHost, QString dbName, QString userName, QString userPass);
     void disconnect();
+    int getInfo();
 
 signals:
 

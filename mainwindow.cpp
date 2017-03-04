@@ -1,4 +1,3 @@
-#include "dbconnection.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -8,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(push_button_clicked()));
+    dbConnection = new DBConnection();
 }
 
 MainWindow::~MainWindow()
@@ -16,13 +15,26 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::push_button_clicked() {
-    DBConnection *dbConnection = new DBConnection();
+void MainWindow::on_pushButton_2_clicked()
+{
+    dbConnection->disconnect();
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    dbConnection->getInfo();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
     if(dbConnection->connect("localhost", "postgres", "postgres", "123456")) {
         QMessageBox *msgBox = new QMessageBox();
         msgBox->setText("Соединение установлено");
         msgBox->show();
-        delete msgBox;
-        dbConnection->disconnect();
+    }
+    else {
+        QMessageBox *msgBox = new QMessageBox();
+        msgBox->setText("Не удалось установить соединение");
+        msgBox->show();
     }
 }

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
+#include "dbconnection.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,10 +18,16 @@ public:
     ~MainWindow();
 
 private slots:
-    void push_button_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
+    DBConnection *dbConnection;
 };
 
 #endif // MAINWINDOW_H
