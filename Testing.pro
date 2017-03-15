@@ -15,7 +15,8 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    dbconnection.cpp
+    dbconnection.cpp \
+    qzip.cpp
 
 HEADERS  += mainwindow.h \
     dbconnection.h \
