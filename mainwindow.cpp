@@ -27,7 +27,7 @@ void MainWindow::on_pushButton_3_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    if(dbConnection->connect("localhost", "postgres", "postgres", "123456")) {
+    if(dbConnection->connect("localhost", "testing", "postgres", "123456")) {
         QMessageBox *msgBox = new QMessageBox();
         msgBox->setText("Соединение установлено");
         msgBox->show();

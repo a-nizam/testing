@@ -18,6 +18,8 @@ SOURCES += main.cpp\
     dbconnection.cpp
 
 HEADERS  += mainwindow.h \
-    dbconnection.h
+    dbconnection.h \
+    qzipreader_p.h \
+    qzipwriter_p.h
 
 FORMS    += mainwindow.ui

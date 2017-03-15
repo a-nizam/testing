@@ -24,16 +24,16 @@ void DBConnection::disconnect() {
 
 int DBConnection::getInfo() {
     QSqlQuery *query = new QSqlQuery(*db);
-    query->exec("sdgsdgsfg");
+    query->exec("SELECT * FROM student");
+
     if (db->lastError().isValid()){
         QMessageBox *msgBox = new QMessageBox();
         msgBox->setText(db->lastError().text());
         msgBox->show();
     }
 
-
     while (query->next()) {
-        QString name = query->value(0).toString();
+        QString name = query->value(1).toString();
         QMessageBox *msgBox = new QMessageBox();
         msgBox->setText(name);
         msgBox->show();
