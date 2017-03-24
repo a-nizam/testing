@@ -39,9 +39,9 @@
 #ifndef QZIPWRITER_H
 #define QZIPWRITER_H
 
-#include <QtGui/private/qtguiglobal_p.h>
-
 #ifndef QT_NO_TEXTODFWRITER
+#include <QtGui>
+
 
 //
 //  W A R N I N G

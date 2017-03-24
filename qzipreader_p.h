@@ -40,8 +40,7 @@
 #ifndef QZIPREADER_H
 #define QZIPREADER_H
 
-#include <QtGui/private/qtguiglobal_p.h>
-#include <QtCore/qglobal.h>
+#include <QtGui>
 
 #ifndef QT_NO_TEXTODFWRITER
 
