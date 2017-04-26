@@ -26,6 +26,7 @@ public:
     int connect(QString dbHost, QString dbName, QString userName, QString userPass);
     void disconnect();
     int getInfo();
+    int sendQuery(QString _sQuery, QSqlQuery *&_queryResult);
 
 signals:
 

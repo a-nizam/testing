@@ -3,9 +3,10 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QStringListModel>
 #include "dbconnection.h"
-#include "qzipreader_p.h"
-#include "qzipwriter_p.h"
+#include "testmodel.h"
+#include "testwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,18 +21,15 @@ public:
     ~MainWindow();
 
 private slots:
-
-    void on_pushButton_2_clicked();
-
-    void on_pushButton_3_clicked();
-
-    void on_pushButton_clicked();
-
-    void on_pushButton_4_clicked();
+    void on_action_13_triggered();
 
 private:
     Ui::MainWindow *ui;
     DBConnection *dbConnection;
+    TestModel *modelTests;
+
+private:
+
 };
 
 #endif // MAINWINDOW_H

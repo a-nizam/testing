@@ -22,6 +22,21 @@ void DBConnection::disconnect() {
     QSqlDatabase::removeDatabase("postgres");
 }
 
+int DBConnection::sendQuery(QString _sQuery, QSqlQuery *&_queryResult) {
+    QSqlQuery *query = new QSqlQuery(*db);
+    query->exec(_sQuery);
+    if (db->lastError().isValid()){
+        QMessageBox *msgBox = new QMessageBox();
+        msgBox->setText(db->lastError().text());
+        msgBox->show();
+        return 0;
+    }
+    else {
+        _queryResult = query;
+        return 1;
+    }
+}
+
 int DBConnection::getInfo() {
     QSqlQuery *query = new QSqlQuery(*db);
     query->exec("SELECT * FROM student");

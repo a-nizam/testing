@@ -16,11 +16,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     dbconnection.cpp \
-    qzip.cpp
+    testwindow.cpp \
+    testmodel.cpp
 
 HEADERS  += mainwindow.h \
     dbconnection.h \
-    qzipreader_p.h \
-    qzipwriter_p.h
+    testwindow.h \
+    testmodel.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    testwindow.ui
