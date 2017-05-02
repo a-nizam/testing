@@ -1,17 +1,12 @@
 #ifndef TESTMODEL_H
 #define TESTMODEL_H
 
-#include <QStringListModel>
-#include <QStringList>
+#include <QSqlTableModel>
 
-
-class TestModel : public QStringListModel
+class TestModel : public QSqlTableModel
 {
 public:
-    TestModel();
-private:
-    QStringList *slTest;
-    int loadTests();
+    explicit TestModel(QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase());
 };
 
 #endif // TESTMODEL_H

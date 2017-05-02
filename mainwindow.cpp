@@ -16,8 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     // creating and setting model of tests list
-    modelTests = new TestModel();
-    ui->listView->setModel(modelTests);
+    modelTests = new TestModel(Q_NULLPTR, *(dbConnection->db));
+    ui->tableViewTests->setModel(modelTests);
 
 //    sending request template
 //    QSqlQuery *qQuery;

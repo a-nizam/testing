@@ -1,14 +1,10 @@
 #include "testmodel.h"
 
-TestModel::TestModel()
-{
-    slTest = new QStringList();
-    loadTests();
-    this->setStringList(*slTest);
-}
-
-int TestModel::loadTests() {
-    slTest->append("Test1");
-    slTest->append("Test2");
-    return 0;
+TestModel::TestModel(QObject *parent, QSqlDatabase db) : QSqlTableModel(parent, db) {
+    setTable("test");
+    setEditStrategy(OnRowChange);
+    select();
+    setHeaderData(0, Qt::Horizontal, tr("Id"));
+    setHeaderData(1, Qt::Horizontal, tr("Предмет"));
+    setHeaderData(2, Qt::Horizontal, tr("Дата"));
 }
