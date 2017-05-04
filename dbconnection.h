@@ -15,13 +15,23 @@ class DBConnection : public QObject
 {
     Q_OBJECT
 public:
-    explicit DBConnection(QObject *parent = 0);
+    static DBConnection &Instance() {
+        static DBConnection s;
+        return s;
+    }
+
+private:
+    DBConnection();
+    ~DBConnection();
+    DBConnection(DBConnection const&) = delete;
+    DBConnection& operator= (DBConnection const&) = delete;
 public:
     QString dbHost;
     QString dbName;
     QString userName;
     QString userPass;
     QSqlDatabase *db;
+
 public:
     int connect(QString dbHost, QString dbName, QString userName, QString userPass);
     void disconnect();

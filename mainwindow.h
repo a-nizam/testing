@@ -4,9 +4,11 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QStringListModel>
+#include <QSqlRelationalDelegate>
 #include "dbconnection.h"
-#include "testmodel.h"
-#include "testwindow.h"
+#include "generatedtestmodel.h"
+#include "availabletestmodel.h"
+#include "questiontypedialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -21,15 +23,20 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_action_13_triggered();
+
+    void on_action_6_triggered();
+
+    void on_tableViewAvailable_doubleClicked(const QModelIndex &index);
 
 private:
     Ui::MainWindow *ui;
     DBConnection *dbConnection;
-    TestModel *modelTests;
+    GeneratedTestModel *modelGeneratedTests;
+    AvailableTestModel *modelAvailableTests;
 
 private:
-
+    inline int setGeneratedTestModel();
+    inline int setAvailableTestModel();
 };
 
 #endif // MAINWINDOW_H

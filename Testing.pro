@@ -16,13 +16,17 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     dbconnection.cpp \
-    testwindow.cpp \
-    testmodel.cpp
+    questiontypemodel.cpp \
+    generatedtestmodel.cpp \
+    availabletestmodel.cpp \
+    questiontypedialog.cpp
 
 HEADERS  += mainwindow.h \
     dbconnection.h \
-    testwindow.h \
-    testmodel.h
+    questiontypemodel.h \
+    generatedtestmodel.h \
+    availabletestmodel.h \
+    questiontypedialog.h
 
 FORMS    += mainwindow.ui \
-    testwindow.ui
+    questiontypedialog.ui

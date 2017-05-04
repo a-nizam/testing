@@ -1,10 +1,8 @@
 #include "dbconnection.h"
 
-DBConnection::DBConnection(QObject *parent) : QObject(parent)
-{
+DBConnection::DBConnection() { }
 
-}
-
+DBConnection::~DBConnection() { }
 
 int DBConnection::connect(QString dbHost, QString dbName, QString userName, QString userPass) {
     db = new QSqlDatabase();
