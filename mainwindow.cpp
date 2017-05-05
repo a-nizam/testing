@@ -83,10 +83,11 @@ int MainWindow::setAvailableTestModel() {
 void MainWindow::on_action_6_triggered()
 {
     QuestionTypeDialog * qtw = new QuestionTypeDialog(this);
+    //connect(classObjectWhereTheSignalIs, SIGNAL(signalName(paramType1,paramType2)),classObjectWhereTheSlotIs,SLOT(slotName(paramType1,paramType2)));
     qtw->show();
 }
 
 void MainWindow::on_tableViewAvailable_doubleClicked(const QModelIndex &index)
 {
-//    QMessageBox::critical(this, "11111", QString::number(index.data().));
+    QMessageBox::critical(this, "RowNumber", QString::number(index.row()));
 }

@@ -19,14 +19,17 @@ SOURCES += main.cpp\
     questiontypemodel.cpp \
     generatedtestmodel.cpp \
     availabletestmodel.cpp \
-    questiontypedialog.cpp
+    questiontypedialog.cpp \
+    themesdialog.cpp
 
 HEADERS  += mainwindow.h \
     dbconnection.h \
     questiontypemodel.h \
     generatedtestmodel.h \
     availabletestmodel.h \
-    questiontypedialog.h
+    questiontypedialog.h \
+    themesdialog.h
 
 FORMS    += mainwindow.ui \
-    questiontypedialog.ui
+    questiontypedialog.ui \
+    themesdialog.ui
