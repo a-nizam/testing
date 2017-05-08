@@ -8,7 +8,11 @@
 class AvailableTestModel : public QSqlRelationalTableModel
 {
 public:
-    explicit AvailableTestModel(QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase());
+    enum columnName {
+        id, name, subject
+    };
+
+    explicit AvailableTestModel(QObject *parent, QSqlDatabase db);
     virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
 };
 

@@ -22,7 +22,6 @@ public:
 
 private:
     DBConnection();
-    ~DBConnection();
     DBConnection(DBConnection const&) = delete;
     DBConnection& operator= (DBConnection const&) = delete;
 public:

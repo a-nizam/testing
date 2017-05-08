@@ -7,7 +7,11 @@
 class GeneratedTestModel : public QSqlRelationalTableModel
 {
 public:
-    explicit GeneratedTestModel(QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase());
+    enum columnName {
+        id, ticket_type, date
+    };
+
+    explicit GeneratedTestModel(QObject *parent, QSqlDatabase db);
     virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
 };
 

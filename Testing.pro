@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     generatedtestmodel.cpp \
     availabletestmodel.cpp \
     questiontypedialog.cpp \
-    themesdialog.cpp
+    themesdialog.cpp \
+    themesmodel.cpp \
+    questionsmodel.cpp
 
 HEADERS  += mainwindow.h \
     dbconnection.h \
@@ -28,7 +30,9 @@ HEADERS  += mainwindow.h \
     generatedtestmodel.h \
     availabletestmodel.h \
     questiontypedialog.h \
-    themesdialog.h
+    themesdialog.h \
+    themesmodel.h \
+    questionsmodel.h
 
 FORMS    += mainwindow.ui \
     questiontypedialog.ui \

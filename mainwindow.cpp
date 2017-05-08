@@ -3,18 +3,20 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    questionTypeDialog(new QuestionTypeDialog(this)),
+    themeDialog(new ThemesDialog(this))
 {
     ui->setupUi(this);
 
-    // connecting to postgresql
-    dbConnection = &DBConnection::Instance();
-    if(!dbConnection->connect("localhost", "testing", "postgres", "123456")) {
-        QMessageBox *msgBox = new QMessageBox();
-        msgBox->setText("Не удалось установить соединение с базой данных");
-        msgBox->show();
+    // connect to postgresql
+    if(!DBConnection::Instance().connect("localhost", "test", "postgres", "123456")) {
+        QMessageBox msgBox;
+        msgBox.setText("Не удалось установить соединение с базой данных");
+        msgBox.exec();
     }
 
+    // set models of generated and available tests table view
     setGeneratedTestModel();
     setAvailableTestModel();
 
@@ -32,16 +34,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    dbConnection->disconnect();
+    DBConnection::Instance().disconnect();
     delete ui;
 }
 
-// creating and setting model of tests list
+// create and set model of tests list
 int MainWindow::setGeneratedTestModel() {
-    if (modelGeneratedTests = new GeneratedTestModel(this, *(dbConnection->db))) {
+    if (modelGeneratedTests = new GeneratedTestModel(this, *(DBConnection::Instance().db))) {
         ui->tableViewTests->setModel(modelGeneratedTests);
         ui->tableViewTests->setItemDelegate(new QSqlRelationalDelegate(ui->tableViewTests));
-        ui->tableViewTests->hideColumn(0);
+        ui->tableViewTests->hideColumn(GeneratedTestModel::columnName::id);
         return 1;
     }
     else {
@@ -49,11 +51,12 @@ int MainWindow::setGeneratedTestModel() {
     }
 }
 
+// create and set model of available tests list
 int MainWindow::setAvailableTestModel() {
-    if (modelAvailableTests = new AvailableTestModel(this, *(dbConnection->db))) {
+    if (modelAvailableTests = new AvailableTestModel(this, *(DBConnection::Instance().db))) {
         ui->tableViewAvailable->setModel(modelAvailableTests);
         ui->tableViewAvailable->setItemDelegate(new QSqlRelationalDelegate(ui->tableViewAvailable));
-        ui->tableViewAvailable->hideColumn(0);
+        ui->tableViewAvailable->hideColumn(AvailableTestModel::columnName::id);
         return 1;
     }
     else {
@@ -82,12 +85,18 @@ int MainWindow::setAvailableTestModel() {
 
 void MainWindow::on_action_6_triggered()
 {
-    QuestionTypeDialog * qtw = new QuestionTypeDialog(this);
-    //connect(classObjectWhereTheSignalIs, SIGNAL(signalName(paramType1,paramType2)),classObjectWhereTheSlotIs,SLOT(slotName(paramType1,paramType2)));
-    qtw->show();
+    questionTypeDialog->show();
 }
 
 void MainWindow::on_tableViewAvailable_doubleClicked(const QModelIndex &index)
 {
-    QMessageBox::critical(this, "RowNumber", QString::number(index.row()));
+    // send test id to theme dialog
+    themeDialog->setTestId(modelAvailableTests->index(index.row(), AvailableTestModel::columnName::id).data().toInt());
+
+    themeDialog->show();
+}
+
+void MainWindow::on_action_7_triggered()
+{
+    QMessageBox::critical(this, "", QApplication::focusWidget()->objectName());
 }

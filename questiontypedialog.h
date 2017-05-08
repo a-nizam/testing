@@ -19,16 +19,14 @@ public:
 
 private slots:
     void on_pushButtonAdd_clicked();
-
     void on_pushButtonSave_clicked();
-
     void on_pushButtonDelete_clicked();
-
     void on_pushButtonReset_clicked();
 
 private:
     Ui::QuestionTypeDialog *ui;
     QuestionTypeModel *questionTypeModel;
+    void showEvent(QShowEvent *event);
 };
 
 #endif // QUESTIONTYPEWINDOW_H

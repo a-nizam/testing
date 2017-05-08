@@ -1,11 +1,10 @@
 #include "dbconnection.h"
 
-DBConnection::DBConnection() { }
+DBConnection::DBConnection() : db(new QSqlDatabase()) {
 
-DBConnection::~DBConnection() { }
+}
 
 int DBConnection::connect(QString dbHost, QString dbName, QString userName, QString userPass) {
-    db = new QSqlDatabase();
     *db = QSqlDatabase::addDatabase("QPSQL", "postgres");
     db->setHostName(dbHost);
     db->setDatabaseName(dbName);
@@ -24,9 +23,9 @@ int DBConnection::sendQuery(QString _sQuery, QSqlQuery *&_queryResult) {
     QSqlQuery *query = new QSqlQuery(*db);
     query->exec(_sQuery);
     if (db->lastError().isValid()){
-        QMessageBox *msgBox = new QMessageBox();
-        msgBox->setText(db->lastError().text());
-        msgBox->show();
+        QMessageBox msgBox;
+        msgBox.setText(db->lastError().text());
+        msgBox.exec();
         return 0;
     }
     else {
@@ -40,16 +39,16 @@ int DBConnection::getInfo() {
     query->exec("SELECT * FROM student");
 
     if (db->lastError().isValid()){
-        QMessageBox *msgBox = new QMessageBox();
-        msgBox->setText(db->lastError().text());
-        msgBox->show();
+        QMessageBox msgBox;
+        msgBox.setText(db->lastError().text());
+        msgBox.show();
     }
 
     while (query->next()) {
         QString name = query->value(1).toString();
-        QMessageBox *msgBox = new QMessageBox();
-        msgBox->setText(name);
-        msgBox->show();
+        QMessageBox msgBox;
+        msgBox.setText(name);
+        msgBox.show();
     }
     return 0;
 }

@@ -9,6 +9,7 @@
 #include "generatedtestmodel.h"
 #include "availabletestmodel.h"
 #include "questiontypedialog.h"
+#include "themesdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,11 +29,14 @@ private slots:
 
     void on_tableViewAvailable_doubleClicked(const QModelIndex &index);
 
+    void on_action_7_triggered();
+
 private:
     Ui::MainWindow *ui;
-    DBConnection *dbConnection;
     GeneratedTestModel *modelGeneratedTests;
     AvailableTestModel *modelAvailableTests;
+    QuestionTypeDialog *questionTypeDialog;
+    ThemesDialog * themeDialog;
 
 private:
     inline int setGeneratedTestModel();

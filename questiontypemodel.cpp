@@ -1,9 +1,9 @@
 #include "questiontypemodel.h"
 
-QuestionTypeModel::QuestionTypeModel(QObject *parent, QSqlDatabase db) : QSqlTableModel(parent, db) {
+QuestionTypeModel::QuestionTypeModel(QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase()) : QSqlTableModel(parent, db) {
     setTable("question_type");
     setEditStrategy(OnManualSubmit);
-    setHeaderData(1, Qt::Horizontal, tr("Название"));
-    setHeaderData(2, Qt::Horizontal, tr("Стоимость"));
+    setHeaderData(columnName::name, Qt::Horizontal, tr("Название"));
+    setHeaderData(columnName::cost, Qt::Horizontal, tr("Стоимость"));
     select();
 }

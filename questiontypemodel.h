@@ -7,7 +7,11 @@
 class QuestionTypeModel : public QSqlTableModel
 {
 public:
-    explicit QuestionTypeModel(QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase());
+    enum columnName {
+        id, name, cost
+    };
+
+    explicit QuestionTypeModel(QObject *parent, QSqlDatabase db);
 };
 
 #endif // QUESTIONTYPEMODEL_H
