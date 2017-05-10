@@ -36,15 +36,32 @@ void ThemesDialog::showEvent(QShowEvent *event) {
     }
 
     // create new model instance for questions view
-    if (questionsModel = new QuestionsModel(this, *(DBConnection::Instance().db))) {
+    if (modelQuestons = new QuestionsModel(this, *(DBConnection::Instance().db))) {
         // set filter to show only selected theme questions
-        questionsModel->setFilter(QString("q_theme=%1").arg(themeId));
+        modelQuestons->setFilter(QString("q_theme=%1").arg(themeId));
 
-        ui->tableViewQuestions->setModel(questionsModel);
+        ui->tableViewQuestions->setModel(modelQuestons);
+        ui->tableViewQuestions->setItemDelegate(new QSqlRelationalDelegate(ui->tableViewQuestions));
 
         // hide id and ticket type columns
         ui->tableViewQuestions->hideColumn(QuestionsModel::columnName::id);
         ui->tableViewQuestions->hideColumn(QuestionsModel::columnName::theme);
+
+        // set first question id
+        const QModelIndex index = modelQuestons->index(0, QuestionsModel::columnName::id);
+        quesitonId = modelTheme->data(index).toInt();
+    }
+
+    // create new model instance for answer view
+    if (modelAnswer = new AnswesrModel(this, *(DBConnection::Instance().db))) {
+        // set filter to show only selected theme questions
+        modelAnswer->setFilter(QString("ans_question=%1").arg(quesitonId));
+
+        ui->tableViewAnswers->setModel(modelAnswer);
+
+        // hide id and ticket type columns
+        ui->tableViewAnswers->hideColumn(AnswesrModel::columnName::id);
+        ui->tableViewAnswers->hideColumn(AnswesrModel::columnName::question);
     }
 }
 
@@ -66,8 +83,18 @@ void ThemesDialog::on_pushButtonAdd_clicked() {
 
     // insert and initialize new row
     p_tableModel->insertRow(p_tableModel->rowCount());
-    const QModelIndex index = p_tableModel->index(p_tableModel->rowCount() - 1, 2);
-    p_tableModel->setData(index, testId);
+    if (QApplication::focusWidget()->objectName() == "tableViewThemes") {
+        const QModelIndex index = p_tableModel->index(p_tableModel->rowCount() - 1, 2);
+        p_tableModel->setData(index, testId);
+    }
+    if (QApplication::focusWidget()->objectName() == "tableViewQuestions") {
+        const QModelIndex index = p_tableModel->index(p_tableModel->rowCount() - 1, 2);
+        p_tableModel->setData(index, themeId);
+    }
+    if (QApplication::focusWidget()->objectName() == "tableViewAnswers") {
+        const QModelIndex index = p_tableModel->index(p_tableModel->rowCount() - 1, 2);
+        p_tableModel->setData(index, quesitonId);
+    }
 }
 
 void ThemesDialog::on_pushButtonRemove_clicked() {
@@ -89,4 +116,16 @@ void ThemesDialog::on_pushButtonSave_clicked() {
 
     // save all changes
     p_tableModel->submitAll();
+}
+
+void ThemesDialog::on_tableViewThemes_clicked(const QModelIndex &index) {
+    const QModelIndex idIndex = modelTheme->index(index.row(), ThemesModel::columnName::id);
+    themeId = modelTheme->data(idIndex).toInt();
+    modelQuestons->setFilter(QString("q_theme=%1").arg(themeId));
+}
+
+void ThemesDialog::on_tableViewQuestions_clicked(const QModelIndex &index) {
+    const QModelIndex idIndex = modelQuestons->index(index.row(), QuestionsModel::columnName::id);
+    quesitonId = modelQuestons->data(idIndex).toInt();
+    modelAnswer->setFilter(QString("ans_question=%1").arg(quesitonId));
 }

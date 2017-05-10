@@ -34,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete  questionTypeDialog;
+    delete themeDialog;
     DBConnection::Instance().disconnect();
     delete ui;
 }

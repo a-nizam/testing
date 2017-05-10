@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     questiontypedialog.cpp \
     themesdialog.cpp \
     themesmodel.cpp \
-    questionsmodel.cpp
+    questionsmodel.cpp \
+    answesrmodel.cpp
 
 HEADERS  += mainwindow.h \
     dbconnection.h \
@@ -32,7 +33,8 @@ HEADERS  += mainwindow.h \
     questiontypedialog.h \
     themesdialog.h \
     themesmodel.h \
-    questionsmodel.h
+    questionsmodel.h \
+    answesrmodel.h
 
 FORMS    += mainwindow.ui \
     questiontypedialog.ui \
