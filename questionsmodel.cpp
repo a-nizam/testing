@@ -6,5 +6,6 @@ QuestionsModel::QuestionsModel(QObject *parent = Q_NULLPTR, QSqlDatabase db = QS
     setRelation(columnName::type, QSqlRelation("question_type", "qtype_id", "qtype_name"));
     setHeaderData(columnName::content, Qt::Horizontal, tr("Вопрос"));
     setHeaderData(columnName::type, Qt::Horizontal, tr("Категория"));
+    setHeaderData(columnName::no_variants, Qt::Horizontal, tr("Без вариантов"));
     select();
 }

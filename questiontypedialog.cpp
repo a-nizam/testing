@@ -39,7 +39,10 @@ void QuestionTypeDialog::showEvent(QShowEvent *event) {
 
     if (questionTypeModel = new QuestionTypeModel(this, *(DBConnection::Instance().db))) {
         ui->tableView->setModel(questionTypeModel);
+        ui->tableView->setItemDelegate(new QSqlRelationalDelegate(ui->tableView));
         ui->tableView->hideColumn(QuestionTypeModel::columnName::id);
-        ui->tableView->setColumnWidth(QuestionTypeModel::columnName::name, 300);
+        ui->tableView->setColumnWidth(QuestionTypeModel::columnName::name, 150);
+        ui->tableView->setColumnWidth(QuestionTypeModel::columnName::ticket_type, 193);
+        ui->tableView->setColumnWidth(QuestionTypeModel::columnName::cost, 80);
     }
 }

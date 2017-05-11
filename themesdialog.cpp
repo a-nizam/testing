@@ -38,7 +38,7 @@ void ThemesDialog::showEvent(QShowEvent *event) {
     // create new model instance for questions view
     if (modelQuestons = new QuestionsModel(this, *(DBConnection::Instance().db))) {
         // set filter to show only selected theme questions
-        modelQuestons->setFilter(QString("q_theme=%1").arg(themeId));
+        modelQuestons->setFilter(QString("question.q_theme=%1").arg(themeId));
 
         ui->tableViewQuestions->setModel(modelQuestons);
         ui->tableViewQuestions->setItemDelegate(new QSqlRelationalDelegate(ui->tableViewQuestions));
@@ -53,15 +53,15 @@ void ThemesDialog::showEvent(QShowEvent *event) {
     }
 
     // create new model instance for answer view
-    if (modelAnswer = new AnswesrModel(this, *(DBConnection::Instance().db))) {
+    if (modelAnswer = new AnswersModel(this, *(DBConnection::Instance().db))) {
         // set filter to show only selected theme questions
         modelAnswer->setFilter(QString("ans_question=%1").arg(quesitonId));
 
         ui->tableViewAnswers->setModel(modelAnswer);
 
         // hide id and ticket type columns
-        ui->tableViewAnswers->hideColumn(AnswesrModel::columnName::id);
-        ui->tableViewAnswers->hideColumn(AnswesrModel::columnName::question);
+        ui->tableViewAnswers->hideColumn(AnswersModel::columnName::id);
+        ui->tableViewAnswers->hideColumn(AnswersModel::columnName::question);
     }
 }
 
@@ -78,8 +78,8 @@ void ThemesDialog::setTestId (int _testId) {
 
 void ThemesDialog::on_pushButtonAdd_clicked() {
     // get focused treeView and its model
-    QTableView *p_tableView = dynamic_cast<QTableView *>(QApplication::focusWidget());
-    QSqlRelationalTableModel *p_tableModel = dynamic_cast<QSqlRelationalTableModel *>(p_tableView->model());
+    QTableView *p_tableView = static_cast<QTableView *>(QApplication::focusWidget());
+    QSqlRelationalTableModel *p_tableModel = static_cast<QSqlRelationalTableModel *>(p_tableView->model());
 
     // insert and initialize new row
     p_tableModel->insertRow(p_tableModel->rowCount());
@@ -99,8 +99,8 @@ void ThemesDialog::on_pushButtonAdd_clicked() {
 
 void ThemesDialog::on_pushButtonRemove_clicked() {
     // get focused treeView and its model
-    QTableView *p_tableView = dynamic_cast<QTableView *>(QApplication::focusWidget());
-    QSqlRelationalTableModel *p_tableModel = dynamic_cast<QSqlRelationalTableModel *>(p_tableView->model());
+    QTableView *p_tableView = static_cast<QTableView *>(QApplication::focusWidget());
+    QSqlRelationalTableModel *p_tableModel = static_cast<QSqlRelationalTableModel *>(p_tableView->model());
 
     // get selected rows and delete them
     QModelIndexList selectedList = p_tableView->selectionModel()->selectedIndexes();
@@ -111,8 +111,8 @@ void ThemesDialog::on_pushButtonRemove_clicked() {
 
 void ThemesDialog::on_pushButtonSave_clicked() {
     // get focused treeView and its model
-    QTableView *p_tableView = dynamic_cast<QTableView *>(QApplication::focusWidget());
-    QSqlRelationalTableModel *p_tableModel = dynamic_cast<QSqlRelationalTableModel *>(p_tableView->model());
+    QTableView *p_tableView = static_cast<QTableView *>(QApplication::focusWidget());
+    QSqlRelationalTableModel *p_tableModel = static_cast<QSqlRelationalTableModel *>(p_tableView->model());
 
     // save all changes
     p_tableModel->submitAll();

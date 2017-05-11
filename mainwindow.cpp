@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // connect to postgresql
-    if(!DBConnection::Instance().connect("localhost", "test", "postgres", "123456")) {
+    if(!DBConnection::Instance().connect("localhost", "testing", "postgres", "123456")) {
         QMessageBox msgBox;
         msgBox.setText("Не удалось установить соединение с базой данных");
         msgBox.exec();

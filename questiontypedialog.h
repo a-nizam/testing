@@ -2,6 +2,7 @@
 #define QUESTIONTYPEWINDOW_H
 
 #include <QDialog>
+#include <QSqlRelationalDelegate>
 #include "dbconnection.h"
 #include "questiontypemodel.h"
 

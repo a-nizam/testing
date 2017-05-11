@@ -1,17 +1,17 @@
 /*
 Navicat PGSQL Data Transfer
 
-Source Server         : test
+Source Server         : testing
 Source Server Version : 90602
 Source Host           : localhost:5432
-Source Database       : test
+Source Database       : testing
 Source Schema         : public
 
 Target Server Type    : PGSQL
 Target Server Version : 90602
 File Encoding         : 65001
 
-Date: 2017-05-10 11:49:12
+Date: 2017-05-11 11:31:02
 */
 
 
@@ -23,9 +23,9 @@ CREATE SEQUENCE "answer_ans_id_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 10
+ START 12
  CACHE 1;
-SELECT setval('"public"."answer_ans_id_seq"', 10, true);
+SELECT setval('"public"."answer_ans_id_seq"', 12, true);
 
 -- ----------------------------
 -- Sequence structure for question_q_id_seq
@@ -35,9 +35,9 @@ CREATE SEQUENCE "question_q_id_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 3
+ START 5
  CACHE 1;
-SELECT setval('"public"."question_q_id_seq"', 3, true);
+SELECT setval('"public"."question_q_id_seq"', 5, true);
 
 -- ----------------------------
 -- Sequence structure for question_type_qtype_id_seq
@@ -47,9 +47,9 @@ CREATE SEQUENCE "question_type_qtype_id_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 2
+ START 3
  CACHE 1;
-SELECT setval('"public"."question_type_qtype_id_seq"', 2, true);
+SELECT setval('"public"."question_type_qtype_id_seq"', 3, true);
 
 -- ----------------------------
 -- Sequence structure for student_student_id_seq
@@ -152,11 +152,13 @@ WITH (OIDS=FALSE)
 -- Records of answer
 -- ----------------------------
 BEGIN;
-INSERT INTO "answer" VALUES ('1', 'Ответ на вопрос 1', '1', 't');
-INSERT INTO "answer" VALUES ('2', 'ответ на вопрос 10', '3', 't');
+INSERT INTO "answer" VALUES ('1', 'Ответ на вопрос 1', '1', 'f');
+INSERT INTO "answer" VALUES ('2', 'ответ на вопрос 10', '3', 'f');
 INSERT INTO "answer" VALUES ('3', 'Ответ на вопрос 1_', '1', 'f');
-INSERT INTO "answer" VALUES ('7', 'Ответ на вопрос 1_', '1', 'f');
+INSERT INTO "answer" VALUES ('7', 'Ответ на вопрос 1_', '1', 't');
 INSERT INTO "answer" VALUES ('9', 'Ответ на вопрос 2', '2', 'f');
+INSERT INTO "answer" VALUES ('11', 'ответ 1', '4', 't');
+INSERT INTO "answer" VALUES ('12', 'ответ 2', '4', 'f');
 COMMIT;
 
 -- ----------------------------
@@ -167,7 +169,8 @@ CREATE TABLE "question" (
 "q_id" int4 DEFAULT nextval('question_q_id_seq'::regclass) NOT NULL,
 "q_content" varchar(511) COLLATE "default" NOT NULL,
 "q_theme" int4 NOT NULL,
-"q_type" int4 NOT NULL
+"q_type" int4 NOT NULL,
+"q_no_variants" bool NOT NULL
 )
 WITH (OIDS=FALSE)
 
@@ -177,9 +180,11 @@ WITH (OIDS=FALSE)
 -- Records of question
 -- ----------------------------
 BEGIN;
-INSERT INTO "question" VALUES ('1', 'Вопрос 1', '1', '1');
-INSERT INTO "question" VALUES ('2', 'Вопрос 2', '1', '2');
-INSERT INTO "question" VALUES ('3', 'Вопрос 10', '7', '2');
+INSERT INTO "question" VALUES ('1', 'Вопрос 1', '1', '1', 'f');
+INSERT INTO "question" VALUES ('2', 'Вопрос 2', '1', '2', 'f');
+INSERT INTO "question" VALUES ('3', 'Вопрос 10', '7', '2', 'f');
+INSERT INTO "question" VALUES ('4', 'Текст вопроса', '1', '3', 'f');
+INSERT INTO "question" VALUES ('5', 'Текст вопроса', '1', '2', 'f');
 COMMIT;
 
 -- ----------------------------
@@ -189,6 +194,7 @@ DROP TABLE IF EXISTS "question_type";
 CREATE TABLE "question_type" (
 "qtype_id" int4 DEFAULT nextval('question_type_qtype_id_seq'::regclass) NOT NULL,
 "qtype_name" varchar(15) COLLATE "default" NOT NULL,
+"qtype_ticket_type" int4 NOT NULL,
 "qtype_cost" int4 NOT NULL
 )
 WITH (OIDS=FALSE)
@@ -199,8 +205,9 @@ WITH (OIDS=FALSE)
 -- Records of question_type
 -- ----------------------------
 BEGIN;
-INSERT INTO "question_type" VALUES ('1', 'Простой', '1');
-INSERT INTO "question_type" VALUES ('2', 'Средний', '3');
+INSERT INTO "question_type" VALUES ('1', 'Простой', '1', '1');
+INSERT INTO "question_type" VALUES ('2', 'Средний', '1', '3');
+INSERT INTO "question_type" VALUES ('3', 'Сложный', '1', '5');
 COMMIT;
 
 -- ----------------------------

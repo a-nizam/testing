@@ -8,7 +8,7 @@ class QuestionsModel : public QSqlRelationalTableModel
 {
 public:
     enum columnName {
-        id, content, theme, type
+        id, content, theme, type, no_variants
     };
 
     explicit QuestionsModel(QObject *parent, QSqlDatabase db);

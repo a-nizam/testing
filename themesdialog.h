@@ -6,7 +6,7 @@
 #include "dbconnection.h"
 #include "themesmodel.h"
 #include "questionsmodel.h"
-#include "answesrmodel.h"
+#include "answersmodel.h"
 
 namespace Ui {
 class ThemesDialog;
@@ -29,7 +29,7 @@ private:
     void closeEvent(QCloseEvent *);
     ThemesModel *modelTheme;
     QuestionsModel *modelQuestons;
-    AnswesrModel *modelAnswer;
+    AnswersModel *modelAnswer;
 public:
     void setTestId (int _testId);
 private slots:

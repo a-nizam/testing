@@ -23,7 +23,7 @@ SOURCES += main.cpp\
     themesdialog.cpp \
     themesmodel.cpp \
     questionsmodel.cpp \
-    answesrmodel.cpp
+    answersmodel.cpp
 
 HEADERS  += mainwindow.h \
     dbconnection.h \
@@ -34,7 +34,7 @@ HEADERS  += mainwindow.h \
     themesdialog.h \
     themesmodel.h \
     questionsmodel.h \
-    answesrmodel.h
+    answersmodel.h
 
 FORMS    += mainwindow.ui \
     questiontypedialog.ui \

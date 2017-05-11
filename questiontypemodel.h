@@ -2,13 +2,13 @@
 #define QUESTIONTYPEMODEL_H
 
 #include <QObject>
-#include <QSqlTableModel>
+#include <QSqlRelationalTableModel>
 
-class QuestionTypeModel : public QSqlTableModel
+class QuestionTypeModel : public QSqlRelationalTableModel
 {
 public:
     enum columnName {
-        id, name, cost
+        id, name, ticket_type, cost
     };
 
     explicit QuestionTypeModel(QObject *parent, QSqlDatabase db);

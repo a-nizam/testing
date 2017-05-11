@@ -4,13 +4,13 @@
 #include <QObject>
 #include <QSqlRelationalTableModel>
 
-class AnswesrModel : public QSqlRelationalTableModel
+class AnswersModel : public QSqlRelationalTableModel
 {
 public:
     enum columnName {
         id, content, question, isCorrect
     };
-    explicit AnswesrModel(QObject *parent, QSqlDatabase db);
+    explicit AnswersModel(QObject *parent, QSqlDatabase db);
 };
 
 #endif // ANSWESRMODEL_H
