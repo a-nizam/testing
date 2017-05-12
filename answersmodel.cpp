@@ -5,5 +5,4 @@ AnswersModel::AnswersModel(QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDa
     setEditStrategy(OnManualSubmit);
     setHeaderData(columnName::content, Qt::Horizontal, tr("Ответ"));
     setHeaderData(columnName::isCorrect, Qt::Horizontal, tr("Правильный"));
-    select();
 }

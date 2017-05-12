@@ -7,6 +7,7 @@
 #include "themesmodel.h"
 #include "questionsmodel.h"
 #include "answersmodel.h"
+#include "questionsdelegate.h"
 
 namespace Ui {
 class ThemesDialog;

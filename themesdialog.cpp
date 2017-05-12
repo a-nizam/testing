@@ -38,10 +38,11 @@ void ThemesDialog::showEvent(QShowEvent *event) {
     // create new model instance for questions view
     if (modelQuestons = new QuestionsModel(this, *(DBConnection::Instance().db))) {
         // set filter to show only selected theme questions
-        modelQuestons->setFilter(QString("question.q_theme=%1").arg(themeId));
+        modelQuestons->setFilter(QString("question.q_theme=%1 AND relTblAl_3.qtype_name='Простой'").arg(themeId));
+        modelQuestons->select();
 
         ui->tableViewQuestions->setModel(modelQuestons);
-        ui->tableViewQuestions->setItemDelegate(new QSqlRelationalDelegate(ui->tableViewQuestions));
+        ui->tableViewQuestions->setItemDelegate(new QuestionsDelegate(ui->tableViewQuestions));
 
         // hide id and ticket type columns
         ui->tableViewQuestions->hideColumn(QuestionsModel::columnName::id);
@@ -56,6 +57,7 @@ void ThemesDialog::showEvent(QShowEvent *event) {
     if (modelAnswer = new AnswersModel(this, *(DBConnection::Instance().db))) {
         // set filter to show only selected theme questions
         modelAnswer->setFilter(QString("ans_question=%1").arg(quesitonId));
+        modelAnswer->select();
 
         ui->tableViewAnswers->setModel(modelAnswer);
 
@@ -87,13 +89,17 @@ void ThemesDialog::on_pushButtonAdd_clicked() {
         const QModelIndex index = p_tableModel->index(p_tableModel->rowCount() - 1, 2);
         p_tableModel->setData(index, testId);
     }
-    if (QApplication::focusWidget()->objectName() == "tableViewQuestions") {
-        const QModelIndex index = p_tableModel->index(p_tableModel->rowCount() - 1, 2);
-        p_tableModel->setData(index, themeId);
-    }
-    if (QApplication::focusWidget()->objectName() == "tableViewAnswers") {
-        const QModelIndex index = p_tableModel->index(p_tableModel->rowCount() - 1, 2);
-        p_tableModel->setData(index, quesitonId);
+    else {
+        if (QApplication::focusWidget()->objectName() == "tableViewQuestions") {
+            const QModelIndex index = p_tableModel->index(p_tableModel->rowCount() - 1, 2);
+            p_tableModel->setData(index, themeId);
+        }
+        else {
+            if (QApplication::focusWidget()->objectName() == "tableViewAnswers") {
+                const QModelIndex index = p_tableModel->index(p_tableModel->rowCount() - 1, 2);
+                p_tableModel->setData(index, quesitonId);
+            }
+        }
     }
 }
 

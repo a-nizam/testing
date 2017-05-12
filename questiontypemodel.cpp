@@ -1,6 +1,8 @@
 #include "questiontypemodel.h"
 
-QuestionTypeModel::QuestionTypeModel(QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase()) : QSqlRelationalTableModel(parent, db) {
+QuestionTypeModel::QuestionTypeModel(QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase()) :
+    QSqlRelationalTableModel(parent, db) {
+
     setTable("question_type");
     setEditStrategy(OnManualSubmit);
     setRelation(columnName::ticket_type, QSqlRelation("ticket_type", "ttype_id", "ttype_name"));

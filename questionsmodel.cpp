@@ -7,5 +7,4 @@ QuestionsModel::QuestionsModel(QObject *parent = Q_NULLPTR, QSqlDatabase db = QS
     setHeaderData(columnName::content, Qt::Horizontal, tr("Вопрос"));
     setHeaderData(columnName::type, Qt::Horizontal, tr("Категория"));
     setHeaderData(columnName::no_variants, Qt::Horizontal, tr("Без вариантов"));
-    select();
 }
