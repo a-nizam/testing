@@ -3,8 +3,10 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QDebug>
 #include <QStringListModel>
 #include <QSqlRelationalDelegate>
+#include <QDir>
 #include "dbconnection.h"
 #include "generatedtestmodel.h"
 #include "availabletestmodel.h"

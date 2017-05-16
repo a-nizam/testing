@@ -66,25 +66,6 @@ int MainWindow::setAvailableTestModel() {
     }
 }
 
-
-//void unzip_doc_content() {
-//    QString path("C:\\Users\\Nizam\\Desktop\\tmp");
-//    QZipReader *zip_reader = new QZipReader(path + QDir::separator() + "tz.docx");
-//    if (zip_reader->exists()) {
-//        QFile file(path + QDir::separator() + "document.xml");
-//        if(file.open(QFile::WriteOnly)) {
-//            foreach (QZipReader::FileInfo info, zip_reader->fileInfoList()) {
-//                if (info.filePath == "word/document.xml") {
-//                    file.write(zip_reader->fileData(info.filePath), zip_reader->fileData(info.filePath).size());
-//                    file.close();
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//    delete zip_reader;
-//}
-
 void MainWindow::on_action_6_triggered()
 {
     questionTypeDialog->show();

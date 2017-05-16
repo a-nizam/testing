@@ -31,6 +31,7 @@ private:
     ThemesModel *modelTheme;
     QuestionsModel *modelQuestons;
     AnswersModel *modelAnswer;
+    void unzip_doc_content();
 public:
     void setTestId (int _testId);
 private slots:

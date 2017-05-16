@@ -1,3 +1,4 @@
+#include "qzip.cpp"
 #include "themesdialog.h"
 #include "ui_themesdialog.h"
 
@@ -15,6 +16,8 @@ ThemesDialog::~ThemesDialog() {
 
 void ThemesDialog::showEvent(QShowEvent *event) {
     QDialog::showEvent(event);
+
+    unzip_doc_content();
 
     // create new model instance for themes view
     if (modelTheme = new ThemesModel(this, *(DBConnection::Instance().db))) {
@@ -134,4 +137,22 @@ void ThemesDialog::on_tableViewQuestions_clicked(const QModelIndex &index) {
     const QModelIndex idIndex = modelQuestons->index(index.row(), QuestionsModel::columnName::id);
     quesitonId = modelQuestons->data(idIndex).toInt();
     modelAnswer->setFilter(QString("ans_question=%1").arg(quesitonId));
+}
+
+void ThemesDialog::unzip_doc_content() {
+    QString path("C:");
+    QZipReader *zip_reader = new QZipReader(path + QDir::separator() + "q.docx");
+    if (zip_reader->exists()) {
+        QFile file("document.xml");
+        if(file.open(QFile::WriteOnly)) {
+            foreach (QZipReader::FileInfo info, zip_reader->fileInfoList()) {
+                if (info.filePath == "word/document.xml") {
+                    file.write(zip_reader->fileData(info.filePath), zip_reader->fileData(info.filePath).size());
+                    file.close();
+                    break;
+                }
+            }
+        }
+    }
+    delete zip_reader;
 }
