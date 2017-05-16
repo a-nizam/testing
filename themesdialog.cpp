@@ -42,7 +42,7 @@ void ThemesDialog::showEvent(QShowEvent *event) {
         modelQuestons->select();
 
         ui->tableViewQuestions->setModel(modelQuestons);
-        ui->tableViewQuestions->setItemDelegate(new QuestionsDelegate(ui->tableViewQuestions));
+        ui->tableViewQuestions->setItemDelegate(new QuestionsDelegate(testId, ui->tableViewQuestions));
 
         // hide id and ticket type columns
         ui->tableViewQuestions->hideColumn(QuestionsModel::columnName::id);
