@@ -5,7 +5,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     questionTypeDialog(new QuestionTypeDialog(this)),
-    themeDialog(new ThemesDialog(this))
+    themeDialog(new ThemesDialog(this)),
+    importFromWordDialog(new ImportFromWordDialog(this))
 {
     ui->setupUi(this);
 
@@ -36,6 +37,7 @@ MainWindow::~MainWindow()
 {
     delete  questionTypeDialog;
     delete themeDialog;
+    delete importFromWordDialog;
     DBConnection::Instance().disconnect();
     delete ui;
 }
@@ -66,20 +68,21 @@ int MainWindow::setAvailableTestModel() {
     }
 }
 
-void MainWindow::on_action_6_triggered()
-{
+void MainWindow::on_action_6_triggered() {
     questionTypeDialog->show();
 }
 
-void MainWindow::on_tableViewAvailable_doubleClicked(const QModelIndex &index)
-{
+void MainWindow::on_tableViewAvailable_doubleClicked(const QModelIndex &index) {
     // send test id to theme dialog
     themeDialog->setTestId(modelAvailableTests->index(index.row(), AvailableTestModel::columnName::id).data().toInt());
 
     themeDialog->show();
 }
 
-void MainWindow::on_action_7_triggered()
-{
+void MainWindow::on_action_7_triggered() {
     QMessageBox::critical(this, "", QApplication::focusWidget()->objectName());
+}
+
+void MainWindow::on_action_3_triggered() {
+    importFromWordDialog->show();
 }

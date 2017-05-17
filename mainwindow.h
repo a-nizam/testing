@@ -12,6 +12,7 @@
 #include "availabletestmodel.h"
 #include "questiontypedialog.h"
 #include "themesdialog.h"
+#include "importfromworddialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -33,12 +34,15 @@ private slots:
 
     void on_action_7_triggered();
 
+    void on_action_3_triggered();
+
 private:
     Ui::MainWindow *ui;
     GeneratedTestModel *modelGeneratedTests;
     AvailableTestModel *modelAvailableTests;
     QuestionTypeDialog *questionTypeDialog;
     ThemesDialog * themeDialog;
+    ImportFromWordDialog *importFromWordDialog;
 
 private:
     inline int setGeneratedTestModel();

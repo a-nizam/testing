@@ -27,7 +27,8 @@ SOURCES += \
     questiontypedialog.cpp \
     questiontypemodel.cpp \
     themesdialog.cpp \
-    themesmodel.cpp
+    themesmodel.cpp \
+    importfromworddialog.cpp
 
 HEADERS  += \
     answersmodel.h \
@@ -40,9 +41,11 @@ HEADERS  += \
     questiontypedialog.h \
     questiontypemodel.h \
     themesdialog.h \
-    themesmodel.h
+    themesmodel.h \
+    importfromworddialog.h
 
 FORMS    += \
     mainwindow.ui \
     questiontypedialog.ui \
-    themesdialog.ui
+    themesdialog.ui \
+    importfromworddialog.ui

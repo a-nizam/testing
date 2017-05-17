@@ -72,6 +72,7 @@
     <property name="title">
      <string>Файл</string>
     </property>
+    <addaction name="action_3"/>
     <addaction name="action_2"/>
    </widget>
    <widget class="QMenu" name="menu_2">
@@ -172,6 +173,11 @@
    </property>
    <property name="shortcut">
     <string>Del</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>Импорт</string>
    </property>
   </action>
  </widget>
