@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QFileDialog>
+#include <QMessageBox>
 
 namespace Ui {
 class ImportFromWordDialog;
@@ -25,7 +26,7 @@ private:
     Ui::ImportFromWordDialog *ui;
 
 private:
-    void unzipDocumentXml(QString path);
+    int unzipDocumentXml(QString path);
 };
 
 #endif // IMPORTFROMWORDDIALOG_H
