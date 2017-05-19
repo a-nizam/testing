@@ -4,14 +4,20 @@
 
 ImportFromWordDialog::ImportFromWordDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ImportFromWordDialog)
+    ui(new Ui::ImportFromWordDialog),
+    testsModel(new QStringListModel),
+    themesModel(new QStringListModel)
 {
+
     ui->setupUi(this);
 }
 
-ImportFromWordDialog::~ImportFromWordDialog()
-{
+ImportFromWordDialog::~ImportFromWordDialog() {
     delete ui;
+}
+
+void ImportFromWordDialog::showEvent(QShowEvent *) {
+    // TODO: Заполнить поля теста и темы
 }
 
 void ImportFromWordDialog::on_pushButtonFileBrowse_clicked() {
@@ -44,11 +50,29 @@ void ImportFromWordDialog::on_pushButtonImport_clicked() {
     QComboBox *testsCombo = ui->comboBoxTests;
     QComboBox *themesCombo = ui->comboBoxTheme;
     QLineEdit *fileLine = ui->lineEditFileBrowse;
-    if (testsCombo->itemData(testsCombo->currentIndex()).toString().length() &
-            themesCombo->itemData(themesCombo->currentIndex()).toString().length() &
+    if (/*testsCombo->itemData(testsCombo->currentIndex()).toString().length() &
+                            themesCombo->itemData(themesCombo->currentIndex()).toString().length() &*/
             fileLine->text().length()) {
         if (unzipDocumentXml(fileLine->text())) {
-            QMessageBox::information(this, "Успешно", "Вопросы импортированы");
+            QFile *xmlFile = new QFile("document.xml");
+            if (xmlFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QXmlStreamReader xmlStreamReader(xmlFile);
+
+                while (!xmlStreamReader.atEnd() && !xmlStreamReader.hasError())
+                {
+                    QXmlStreamReader::TokenType token = xmlStreamReader.readNext();
+                    if (token == QXmlStreamReader::StartDocument)
+                        continue;
+                    if (token == QXmlStreamReader::StartElement) {
+                        if (xmlStreamReader.name() == "t") {
+                            qDebug() << xmlStreamReader.readElementText();
+                        }
+                    }
+                }
+
+                xmlFile->close();
+                QMessageBox::information(this, "Успешно", "Вопросы импортированы");
+            }
         }
     }
     else {
