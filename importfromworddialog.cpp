@@ -4,9 +4,7 @@
 
 ImportFromWordDialog::ImportFromWordDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ImportFromWordDialog),
-    testsModel(new QStringListModel),
-    themesModel(new QStringListModel)
+    ui(new Ui::ImportFromWordDialog)
 {
 
     ui->setupUi(this);
@@ -17,7 +15,42 @@ ImportFromWordDialog::~ImportFromWordDialog() {
 }
 
 void ImportFromWordDialog::showEvent(QShowEvent *) {
-    // TODO: Заполнить поля теста и темы
+    QComboBox *tests = ui->comboBoxTests;
+    QComboBox *themes = ui->comboBoxThemes;
+    DBConnection *dbConnection = &DBConnection::Instance();
+    QSqlQuery *qQuery;
+    int i;
+
+    // clear fileds
+    tests->clear();
+    themes->clear();
+    ui->lineEditFileBrowse->clear();
+
+    // clear models
+    testsList.clear();
+    themesList.clear();
+    testIdList.clear();
+    themeIdList.clear();
+
+    // select tests and themes to comboboxes
+    if (dbConnection->sendQuery("SELECT ttype_id, ttype_name FROM ticket_type", qQuery)) {
+        i = 0;
+        while (qQuery->next()) {
+            testIdList.append(qQuery->value(0).toInt());
+            testsList.append(qQuery->value(1).toString());
+            tests->addItem(testsList.at(i));
+            i++;
+        }
+    }
+    if (dbConnection->sendQuery(tr("SELECT thm_id, thm_name FROM theme WHERE thm_ttype=%1").arg(testIdList.at(0)), qQuery)) {
+        i = 0;
+        while (qQuery->next()) {
+            themeIdList.append(qQuery->value(0).toInt());
+            themesList.append(qQuery->value(1).toString());
+            themes->addItem(themesList.at(i));
+            i++;
+        }
+    }
 }
 
 void ImportFromWordDialog::on_pushButtonFileBrowse_clicked() {
@@ -46,36 +79,106 @@ int ImportFromWordDialog::unzipDocumentXml(QString _path) {
     return errno;
 }
 
+int ImportFromWordDialog::getQuestionTypeId(int _testId, int _cost) const {
+    QSqlQuery *qQuery;
+    int id = -1;
+    if (DBConnection::Instance().sendQuery(tr("SELECT qtype_id FROM question_type WHERE qtype_ticket_type=%1 AND qtype_cost=%2").arg(_testId).arg(_cost), qQuery)) {
+        while (qQuery->next()) {
+            id = qQuery->value(0).toInt();
+        }
+    }
+    return id;
+}
+
 void ImportFromWordDialog::on_pushButtonImport_clicked() {
-    QComboBox *testsCombo = ui->comboBoxTests;
-    QComboBox *themesCombo = ui->comboBoxTheme;
+    //    QComboBox *testsCombo = ui->comboBoxTests;
+    //    QComboBox *themesCombo = ui->comboBoxThemes;
+    QString line;
+    unsigned short cost;
+    int questionTypeId;
     QLineEdit *fileLine = ui->lineEditFileBrowse;
-    if (/*testsCombo->itemData(testsCombo->currentIndex()).toString().length() &
-                            themesCombo->itemData(themesCombo->currentIndex()).toString().length() &*/
-            fileLine->text().length()) {
+    int testId = testIdList.at(ui->comboBoxTests->currentIndex());
+    int themeId = themeIdList.at(ui->comboBoxThemes->currentIndex());
+    QString questionInsertQuery;
+    char isNoVariantQuestion;
+
+    if (fileLine->text().length()) {
         if (unzipDocumentXml(fileLine->text())) {
             QFile *xmlFile = new QFile("document.xml");
             if (xmlFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
                 QXmlStreamReader xmlStreamReader(xmlFile);
+                int errno = DBConnection::Instance().db->transaction();
+                if (errno) {
 
-                while (!xmlStreamReader.atEnd() && !xmlStreamReader.hasError())
-                {
-                    QXmlStreamReader::TokenType token = xmlStreamReader.readNext();
-                    if (token == QXmlStreamReader::StartDocument)
-                        continue;
-                    if (token == QXmlStreamReader::StartElement) {
-                        if (xmlStreamReader.name() == "t") {
-                            qDebug() << xmlStreamReader.readElementText();
+                    while (!xmlStreamReader.atEnd() && !xmlStreamReader.hasError()) {
+                        QXmlStreamReader::TokenType token = xmlStreamReader.readNext();
+                        if (token == QXmlStreamReader::StartDocument)
+                            continue;
+                        if (token == QXmlStreamReader::StartElement) {
+                            if (xmlStreamReader.name() == "t") {
+                                line = xmlStreamReader.readElementText();
+
+                                // if the line is question
+                                if (line.at(0) == "?" && line.length() >= 3) {
+                                    cost = line.at(1).digitValue();
+
+                                    // rollback if there is no any question type for these params
+                                    questionTypeId = getQuestionTypeId(testId, cost);
+                                    if (questionTypeId == -1) {
+                                        errno = 0;
+                                        break;
+                                    }
+
+                                    // determine if the question have variants
+                                    isNoVariantQuestion = line.at(2) == "@" ? 't' : 'f';
+
+                                    // clean info symbols of the line (3 if have no variant symbol)
+                                    line.remove(0, isNoVariantQuestion == 't' ? 3 : 2);
+
+                                    questionInsertQuery = tr("INSERT INTO question(q_content, q_theme, q_type, q_no_variants) VALUES('%1', %2, %3, '%4')").arg(line).arg(themeId).arg(questionTypeId).arg(isNoVariantQuestion);
+                                    qDebug() << questionInsertQuery;
+                                }
+                            }
                         }
                     }
-                }
 
+                    if (errno) {
+                        DBConnection::Instance().db->commit();
+                        QMessageBox::information(this, "Успешно", "Вопросы импортированы");
+                    }
+                    else {
+                        DBConnection::Instance().db->rollback();
+                        QMessageBox::information(this, "Ошибка", "Не удалось импортировать вопросы");
+                    }
+                }
                 xmlFile->close();
-                QMessageBox::information(this, "Успешно", "Вопросы импортированы");
+                delete xmlFile;
             }
         }
     }
     else {
         QMessageBox::information(this, "Отказ", "Заполнены не все поля");
+    }
+}
+
+void ImportFromWordDialog::on_comboBoxTests_activated(int index) {
+    QComboBox *themes = ui->comboBoxThemes;
+    DBConnection *dbConnection = &DBConnection::Instance();
+    QSqlQuery *qQuery;
+    int testId = testIdList.at(index);
+
+    themes->clear();
+    themesList.clear();
+    themeIdList.clear();
+
+    // select themes when test is changed
+    if (dbConnection->sendQuery(tr("SELECT thm_id, thm_name FROM theme WHERE thm_ttype=%1").arg(testId), qQuery)) {
+        int i = 0;
+        while (qQuery->next()) {
+            themeIdList.append(qQuery->value(0).toInt());
+            themesList.append(qQuery->value(1).toString());
+            themes->addItem(themesList.at(i));
+            i++;
+        }
     }
 }

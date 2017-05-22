@@ -6,7 +6,8 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QXmlStreamReader>
-#include <QStringListModel>
+#include <QStringList>
+#include "dbconnection.h"
 
 namespace Ui {
 class ImportFromWordDialog;
@@ -24,14 +25,18 @@ private slots:
     void on_pushButtonFileBrowse_clicked();
     void on_pushButtonImport_clicked();
 
+    void on_comboBoxTests_activated(int index);
+
 private:
     Ui::ImportFromWordDialog *ui;
     void showEvent(QShowEvent *);
-    QStringListModel *testsModel;
-    QStringListModel *themesModel;
+    QStringList testsList;
+    QList<QString> themesList;
+    QList<int> testIdList, themeIdList;
 
 private:
     int unzipDocumentXml(QString path);
+    int getQuestionTypeId(int _testId, int _cost) const;
 };
 
 #endif // IMPORTFROMWORDDIALOG_H

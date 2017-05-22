@@ -15,7 +15,7 @@ QWidget *QuestionsDelegate::createEditor(QWidget *aParent, const QStyleOptionVie
         return QItemDelegate::createEditor(aParent, option, index);
 
     //set filter and update data
-    childModel->setFilter(QString("qtype_ticket_type=%1").arg(testId));
+    childModel->setFilter(tr("qtype_ticket_type=%1").arg(testId));
     childModel->select();
 
     // category selection field

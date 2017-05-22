@@ -19,7 +19,7 @@ void ThemesDialog::showEvent(QShowEvent *event) {
     // create new model instance for themes view
     if (modelTheme = new ThemesModel(this, *(DBConnection::Instance().db))) {
         // set filter to show only selected ticket type themes
-        modelTheme->setFilter(QString("thm_ttype=%1").arg(testId));
+        modelTheme->setFilter(tr("thm_ttype=%1").arg(testId));
 
         ui->tableViewThemes->setModel(modelTheme);
 
@@ -38,7 +38,7 @@ void ThemesDialog::showEvent(QShowEvent *event) {
     // create new model instance for questions view
     if (modelQuestons = new QuestionsModel(this, *(DBConnection::Instance().db))) {
         // set filter to show only selected theme questions
-        modelQuestons->setFilter(QString("question.q_theme=%1 AND relTblAl_3.qtype_name='Простой'").arg(themeId));
+        modelQuestons->setFilter(tr("question.q_theme=%1 AND relTblAl_3.qtype_name='Простой'").arg(themeId));
         modelQuestons->select();
 
         ui->tableViewQuestions->setModel(modelQuestons);
@@ -56,7 +56,7 @@ void ThemesDialog::showEvent(QShowEvent *event) {
     // create new model instance for answer view
     if (modelAnswer = new AnswersModel(this, *(DBConnection::Instance().db))) {
         // set filter to show only selected theme questions
-        modelAnswer->setFilter(QString("ans_question=%1").arg(quesitonId));
+        modelAnswer->setFilter(tr("ans_question=%1").arg(quesitonId));
         modelAnswer->select();
 
         ui->tableViewAnswers->setModel(modelAnswer);
@@ -127,11 +127,11 @@ void ThemesDialog::on_pushButtonSave_clicked() {
 void ThemesDialog::on_tableViewThemes_clicked(const QModelIndex &index) {
     const QModelIndex idIndex = modelTheme->index(index.row(), ThemesModel::columnName::id);
     themeId = modelTheme->data(idIndex).toInt();
-    modelQuestons->setFilter(QString("q_theme=%1").arg(themeId));
+    modelQuestons->setFilter(tr("q_theme=%1").arg(themeId));
 }
 
 void ThemesDialog::on_tableViewQuestions_clicked(const QModelIndex &index) {
     const QModelIndex idIndex = modelQuestons->index(index.row(), QuestionsModel::columnName::id);
     quesitonId = modelQuestons->data(idIndex).toInt();
-    modelAnswer->setFilter(QString("ans_question=%1").arg(quesitonId));
+    modelAnswer->setFilter(tr("ans_question=%1").arg(quesitonId));
 }
