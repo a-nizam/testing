@@ -9,6 +9,12 @@
 #include <QStringList>
 #include "dbconnection.h"
 
+#define QUESTION_SYMBOL "?"
+#define QUESTION_COST_POSITION 1
+#define NO_VARIANT_SYMBOL_POSITION 2
+#define SPECIAL_SYMBOL_MAX_COUNT 3
+#define SPECIAL_SYMBOL_COUNT_WITH_VARIANTS 2
+
 namespace Ui {
 class ImportFromWordDialog;
 }
@@ -30,6 +36,8 @@ private slots:
 private:
     Ui::ImportFromWordDialog *ui;
     void showEvent(QShowEvent *);
+    int _errno;
+    QString _errorMsg;
     QStringList testsList;
     QList<QString> themesList;
     QList<int> testIdList, themeIdList;

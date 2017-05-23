@@ -60,7 +60,7 @@ void ImportFromWordDialog::on_pushButtonFileBrowse_clicked() {
 }
 
 int ImportFromWordDialog::unzipDocumentXml(QString _path) {
-    int errno = 0;
+    _errno = 0;
     QZipReader *zip_reader = new QZipReader(_path);
     if (zip_reader->exists()) {
         QFile file("document.xml");
@@ -69,14 +69,14 @@ int ImportFromWordDialog::unzipDocumentXml(QString _path) {
                 if (info.filePath == "word/document.xml") {
                     file.write(zip_reader->fileData(info.filePath), zip_reader->fileData(info.filePath).size());
                     file.close();
-                    errno = 1;
+                    _errno = 1;
                     break;
                 }
             }
         }
     }
     delete zip_reader;
-    return errno;
+    return _errno;
 }
 
 int ImportFromWordDialog::getQuestionTypeId(int _testId, int _cost) const {
@@ -100,15 +100,20 @@ void ImportFromWordDialog::on_pushButtonImport_clicked() {
     int testId = testIdList.at(ui->comboBoxTests->currentIndex());
     int themeId = themeIdList.at(ui->comboBoxThemes->currentIndex());
     QString questionInsertQuery;
-    char isNoVariantQuestion;
+    QString answerInsertQuery;
+    int isNoVariantQuestion;
+    int questionCounter = 0;
+    QSqlQuery *qQuery;
+    int questionId;
+    int answerIsCorrect;
 
     if (fileLine->text().length()) {
         if (unzipDocumentXml(fileLine->text())) {
             QFile *xmlFile = new QFile("document.xml");
             if (xmlFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
                 QXmlStreamReader xmlStreamReader(xmlFile);
-                int errno = DBConnection::Instance().db->transaction();
-                if (errno) {
+                _errno = DBConnection::Instance().db->transaction();
+                if (_errno) {
 
                     while (!xmlStreamReader.atEnd() && !xmlStreamReader.hasError()) {
                         QXmlStreamReader::TokenType token = xmlStreamReader.readNext();
@@ -119,36 +124,78 @@ void ImportFromWordDialog::on_pushButtonImport_clicked() {
                                 line = xmlStreamReader.readElementText();
 
                                 // if the line is question
-                                if (line.at(0) == "?" && line.length() >= 3) {
-                                    cost = line.at(1).digitValue();
+                                if (line.at(0) == QUESTION_SYMBOL) {
+
+                                    questionCounter++;
+
+                                    if (line.length() < SPECIAL_SYMBOL_MAX_COUNT) {
+                                        _errno = 0;
+                                        _errorMsg = tr("Недостаточная длина вопроса (Вопрос %1)").arg(questionCounter);
+                                        break;
+                                    }
+                                    cost = line.at(QUESTION_COST_POSITION).digitValue();
 
                                     // rollback if there is no any question type for these params
                                     questionTypeId = getQuestionTypeId(testId, cost);
                                     if (questionTypeId == -1) {
-                                        errno = 0;
+                                        _errno = 0;
+                                        _errorMsg = tr("Нет соответствия в справочнике Типы вопросов (Вопрос %1)").arg(questionCounter);
                                         break;
                                     }
 
                                     // determine if the question have variants
-                                    isNoVariantQuestion = line.at(2) == "@" ? 't' : 'f';
+                                    isNoVariantQuestion = line.at(NO_VARIANT_SYMBOL_POSITION) == "@" ? 1 : 0;
 
                                     // clean info symbols of the line (3 if have no variant symbol)
-                                    line.remove(0, isNoVariantQuestion == 't' ? 3 : 2);
+                                    line.remove(0, isNoVariantQuestion ? SPECIAL_SYMBOL_MAX_COUNT : SPECIAL_SYMBOL_COUNT_WITH_VARIANTS);
 
-                                    questionInsertQuery = tr("INSERT INTO question(q_content, q_theme, q_type, q_no_variants) VALUES('%1', %2, %3, '%4')").arg(line).arg(themeId).arg(questionTypeId).arg(isNoVariantQuestion);
-                                    qDebug() << questionInsertQuery;
+                                    questionInsertQuery = tr("INSERT INTO question(q_content, q_theme, q_type, q_no_variants) VALUES('%1', %2, %3, '%4')").arg(line).arg(themeId).arg(questionTypeId).arg(isNoVariantQuestion ? 't' : 'f');
+
+                                    if (DBConnection::Instance().sendQuery(questionInsertQuery, qQuery)) {
+                                        questionId = qQuery->lastInsertId().toInt();
+                                        delete qQuery;
+                                    }
+                                    else {
+                                        _errno = 0;
+                                        _errorMsg = tr("Не удалось добавить вопрос в базу данных (Вопрос %1)").arg(questionCounter);
+                                        break;
+                                    }
+                                }
+                                // if the line is answer
+                                else {
+                                    answerIsCorrect = line.at(0) == "*" ? 1 : 0;
+
+                                    if (answerIsCorrect) {
+                                        line.remove(0, 1);
+                                    }
+
+                                    answerInsertQuery = tr("INSERT INTO answer(ans_content, ans_question, ans_is_correct) VALUES('%1', %2, '%3')").arg(line).arg(questionId).arg(answerIsCorrect ? 't' : 'f');
+
+                                    if (DBConnection::Instance().sendQuery(answerInsertQuery, qQuery)) {
+                                        delete qQuery;
+                                    }
+                                    else {
+                                        _errno = 0;
+                                        _errorMsg = tr("Не удалось добавить ответ в базу данных (Вопрос %1)").arg(questionCounter);
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
 
-                    if (errno) {
-                        DBConnection::Instance().db->commit();
-                        QMessageBox::information(this, "Успешно", "Вопросы импортированы");
+                    if (_errno) {
+                        if (DBConnection::Instance().db->commit()) {
+                            QMessageBox::information(this, "Успешно", "Вопросы импортированы");
+                        }
+                        else {
+                            QMessageBox::information(this, "Ошибка", "Не удалось сохранить тему");
+                            DBConnection::Instance().db->rollback();
+                        }
                     }
                     else {
                         DBConnection::Instance().db->rollback();
-                        QMessageBox::information(this, "Ошибка", "Не удалось импортировать вопросы");
+                        QMessageBox::information(this, "Ошибка", _errorMsg);
                     }
                 }
                 xmlFile->close();
