@@ -128,6 +128,16 @@ void ImportFromWordDialog::on_pushButtonImport_clicked() {
 
                                     questionCounter++;
 
+                                    while (line.right(1) != AND_OF_LINE_SYMBOL && !xmlStreamReader.atEnd() && !xmlStreamReader.hasError()) {
+                                        QXmlStreamReader::TokenType qToken = xmlStreamReader.readNext();
+                                        if (qToken == QXmlStreamReader::StartElement) {
+                                            if (xmlStreamReader.name() == "t") {
+                                                line += xmlStreamReader.readElementText();
+                                            }
+                                        }
+                                    }
+                                    line.chop(1);
+
                                     if (line.length() < SPECIAL_SYMBOL_MAX_COUNT) {
                                         _errno = 0;
                                         _errorMsg = tr("Недостаточная длина вопроса (Вопрос %1)").arg(questionCounter);
@@ -163,6 +173,16 @@ void ImportFromWordDialog::on_pushButtonImport_clicked() {
                                 }
                                 // if the line is answer
                                 else {
+                                    while (line.right(1) != AND_OF_LINE_SYMBOL && !xmlStreamReader.atEnd() && !xmlStreamReader.hasError()) {
+                                        QXmlStreamReader::TokenType qToken = xmlStreamReader.readNext();
+                                        if (qToken == QXmlStreamReader::StartElement) {
+                                            if (xmlStreamReader.name() == "t") {
+                                                line += xmlStreamReader.readElementText();
+                                            }
+                                        }
+                                    }
+                                    line.chop(1);
+
                                     answerIsCorrect = line.at(0) == "*" ? 1 : 0;
 
                                     if (answerIsCorrect) {
