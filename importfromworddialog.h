@@ -10,6 +10,7 @@
 #include "dbconnection.h"
 
 #define QUESTION_SYMBOL "?"
+#define UNIT_SYMBOL "#"
 #define AND_OF_LINE_SYMBOL "!"
 #define QUESTION_COST_POSITION 1
 #define NO_VARIANT_SYMBOL_POSITION 2

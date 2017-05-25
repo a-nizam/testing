@@ -173,31 +173,36 @@ void ImportFromWordDialog::on_pushButtonImport_clicked() {
                                 }
                                 // if the line is answer
                                 else {
-                                    while (line.right(1) != AND_OF_LINE_SYMBOL && !xmlStreamReader.atEnd() && !xmlStreamReader.hasError()) {
-                                        QXmlStreamReader::TokenType qToken = xmlStreamReader.readNext();
-                                        if (qToken == QXmlStreamReader::StartElement) {
-                                            if (xmlStreamReader.name() == "t") {
-                                                line += xmlStreamReader.readElementText();
-                                            }
-                                        }
-                                    }
-                                    line.chop(1);
+                                    if (line.at(0) == UNIT_SYMBOL) {
 
-                                    answerIsCorrect = line.at(0) == "*" ? 1 : 0;
-
-                                    if (answerIsCorrect) {
-                                        line.remove(0, 1);
-                                    }
-
-                                    answerInsertQuery = tr("INSERT INTO answer(ans_content, ans_question, ans_is_correct) VALUES('%1', %2, '%3')").arg(line).arg(questionId).arg(answerIsCorrect ? 't' : 'f');
-
-                                    if (DBConnection::Instance().sendQuery(answerInsertQuery, qQuery)) {
-                                        delete qQuery;
                                     }
                                     else {
-                                        _errno = 0;
-                                        _errorMsg = tr("Не удалось добавить ответ в базу данных (Вопрос %1)").arg(questionCounter);
-                                        break;
+                                        while (line.right(1) != AND_OF_LINE_SYMBOL && !xmlStreamReader.atEnd() && !xmlStreamReader.hasError()) {
+                                            QXmlStreamReader::TokenType qToken = xmlStreamReader.readNext();
+                                            if (qToken == QXmlStreamReader::StartElement) {
+                                                if (xmlStreamReader.name() == "t") {
+                                                    line += xmlStreamReader.readElementText();
+                                                }
+                                            }
+                                        }
+                                        line.chop(1);
+
+                                        answerIsCorrect = line.at(0) == "*" ? 1 : 0;
+
+                                        if (answerIsCorrect) {
+                                            line.remove(0, 1);
+                                        }
+
+                                        answerInsertQuery = tr("INSERT INTO answer(ans_content, ans_question, ans_is_correct) VALUES('%1', %2, '%3')").arg(line).arg(questionId).arg(answerIsCorrect ? 't' : 'f');
+
+                                        if (DBConnection::Instance().sendQuery(answerInsertQuery, qQuery)) {
+                                            delete qQuery;
+                                        }
+                                        else {
+                                            _errno = 0;
+                                            _errorMsg = tr("Не удалось добавить ответ в базу данных (Вопрос %1)").arg(questionCounter);
+                                            break;
+                                        }
                                     }
                                 }
                             }
