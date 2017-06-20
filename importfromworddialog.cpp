@@ -91,8 +91,6 @@ int ImportFromWordDialog::getQuestionTypeId(int _testId, int _cost) const {
 }
 
 void ImportFromWordDialog::on_pushButtonImport_clicked() {
-    //    QComboBox *testsCombo = ui->comboBoxTests;
-    //    QComboBox *themesCombo = ui->comboBoxThemes;
     QString line;
     unsigned short cost;
     int questionTypeId;
@@ -101,6 +99,7 @@ void ImportFromWordDialog::on_pushButtonImport_clicked() {
     int themeId = themeIdList.at(ui->comboBoxThemes->currentIndex());
     QString questionInsertQuery;
     QString answerInsertQuery;
+    QString unitUpdateQuery;
     int isNoVariantQuestion;
     int questionCounter = 0;
     QSqlQuery *qQuery;
@@ -171,11 +170,32 @@ void ImportFromWordDialog::on_pushButtonImport_clicked() {
                                         break;
                                     }
                                 }
-                                // if the line is answer
+                                // if the line question unit
                                 else {
                                     if (line.at(0) == UNIT_SYMBOL) {
+                                        while (line.right(1) != AND_OF_LINE_SYMBOL && !xmlStreamReader.atEnd() && !xmlStreamReader.hasError()) {
+                                            QXmlStreamReader::TokenType qToken = xmlStreamReader.readNext();
+                                            if (qToken == QXmlStreamReader::StartElement) {
+                                                if (xmlStreamReader.name() == "t") {
+                                                    line += xmlStreamReader.readElementText();
+                                                }
+                                            }
+                                        }
+                                        line.chop(1);
+                                        line.remove(0, 1);
 
+                                        unitUpdateQuery = tr("UPDATE question SET q_unit='%1' WHERE q_id=%2").arg(line).arg(questionId);
+
+                                        if (DBConnection::Instance().sendQuery(unitUpdateQuery, qQuery)) {
+                                            delete qQuery;
+                                        }
+                                        else {
+                                            _errno = 0;
+                                            _errorMsg = tr("Ошибка сохранения единицы измерения (Вопрос %1)").arg(questionCounter);
+                                            break;
+                                        }
                                     }
+                                    // if the line is answer
                                     else {
                                         while (line.right(1) != AND_OF_LINE_SYMBOL && !xmlStreamReader.atEnd() && !xmlStreamReader.hasError()) {
                                             QXmlStreamReader::TokenType qToken = xmlStreamReader.readNext();

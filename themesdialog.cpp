@@ -47,6 +47,7 @@ void ThemesDialog::showEvent(QShowEvent *event) {
         // hide id and ticket type columns
         ui->tableViewQuestions->hideColumn(QuestionsModel::columnName::id);
         ui->tableViewQuestions->hideColumn(QuestionsModel::columnName::theme);
+        ui->tableViewQuestions->setColumnWidth(QuestionsModel::columnName::content, 500);
 
         // set first question id
         const QModelIndex index = modelQuestons->index(0, QuestionsModel::columnName::id);

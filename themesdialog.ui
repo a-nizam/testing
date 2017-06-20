@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>738</width>
-    <height>482</height>
+    <width>1047</width>
+    <height>630</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,44 +16,40 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>22</x>
-     <y>23</y>
-     <width>691</width>
-     <height>438</height>
+     <x>20</x>
+     <y>20</y>
+     <width>1011</width>
+     <height>591</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
+     <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Темы</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QTableView" name="tableViewThemes"/>
-          </item>
-         </layout>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Темы</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>Вопросы</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QTableView" name="tableViewQuestions"/>
-          </item>
-         </layout>
+         <widget class="QTableView" name="tableViewThemes"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Вопросы</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableView" name="tableViewQuestions"/>
         </item>
        </layout>
       </item>
@@ -83,14 +79,14 @@
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>15</width>
+        <width>10</width>
         <height>20</height>
        </size>
       </property>
      </spacer>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_5">
+     <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
        <spacer name="verticalSpacer_2">
         <property name="orientation">
@@ -157,7 +153,6 @@
  </widget>
  <tabstops>
   <tabstop>tableViewThemes</tabstop>
-  <tabstop>tableViewQuestions</tabstop>
   <tabstop>tableViewAnswers</tabstop>
   <tabstop>pushButtonAdd</tabstop>
   <tabstop>pushButtonRemove</tabstop>
